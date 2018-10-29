@@ -10,8 +10,8 @@ This document describes methods used in the paper **'Progress, challenges and op
 #### 1. Introduction 
 
 ```{r echo=FALSE}
-# RL key needed for download. ***change this to your own key- get from iucn.org 
-rlkey <- "cf3cf316d5dd72945456d42a633ac92357f6b8039bf1d512cc58e26d6169a8f3"
+# RL key needed for download. ***change this to your own key - request from iucn.org. This is the default IUCN key
+rlkey <- "9bb4facb6d23f48efbf424bb05c0c1ef1cf6f468393bc745d42179ac4aca5fee"
 ```
 
 *Total number of taxa on the Red List:*
@@ -21,12 +21,11 @@ library(rredlist)
 
 # get total number of taxa
 rredlist::rl_sp_count(key = rlkey)
-
 ```
 
 ```{r}
 # note the version of the Red List
 rredlist::rl_version(key = rlkey)
-
 ```
 
+*Total number of species on the Red List:*
