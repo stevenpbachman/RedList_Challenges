@@ -147,8 +147,9 @@ Craig Hilton-Taylor, pers. comm (10th August 2018)
     sis_connect_pub = 509
     sis_connect_pre_pub = 915
 
-**Assessments published via SIS Connect = 509** **Assessments in SIS
-Connect pipeline = 915**
+**Assessments published via SIS Connect = 509**
+
+**Assessments in SIS Connect pipeline = 915**
 
 ### 2.4 Inclusion of assessments in languages other than English
 
@@ -174,7 +175,7 @@ Craig Hilton-Taylor, pers. comm (10th August 2018)
 
     spatial_tools_citations = 1939
 
-**Number of publications citing spatial tools 1939**
+**Number of publications citing spatial tools = 1939**
 
 ### 2.6 Linking new species and Red List assessment publications
 
@@ -219,11 +220,9 @@ Subset the IPNI data to just tax.nov.
 
 Summarise number of tax.nov by year
 
-    library(tidyverse)
-
     ## Warning: package 'tidyverse' was built under R version 3.5.1
 
-    ## -- Attaching packages ----------------------------------------------------------------------------- tidyverse 1.2.1 --
+    ## -- Attaching packages -------------------------------------------------------------------- tidyverse 1.2.1 --
 
     ## v ggplot2 3.0.0     v purrr   0.2.5
     ## v tibble  1.4.2     v dplyr   0.7.6
@@ -246,7 +245,7 @@ Summarise number of tax.nov by year
 
     ## Warning: package 'forcats' was built under R version 3.5.1
 
-    ## -- Conflicts -------------------------------------------------------------------------------- tidyverse_conflicts() --
+    ## -- Conflicts ----------------------------------------------------------------------- tidyverse_conflicts() --
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -262,7 +261,7 @@ Plot number of newly described taxa per year
       geom_col(aes(x = Year, y = Count))
     plot
 
-![](Methods_files/figure-markdown_strict/unnamed-chunk-21-1.png)
+![](Methods_files/figure-markdown_strict/unnamed-chunk-22-1.png)
 
     # get average number of described tax now between 1999 and 2017
     tax.nov.year.mean = round((mean(tax.nov.year$Count)),0)
