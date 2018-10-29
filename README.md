@@ -7,7 +7,7 @@ and opportunities for plant Red Listing"**.
 All analysis was run in R aside from the workflow for Figure 1
 (Microsoft powerpoint) and the map for Figure 3 (ArcMap 10.3).
 
-See [Methods\_description.md](../blob/master/Methods_description.md) for
+See [Methods\_description.md](../master/Methods_description.md) for
 detailed methods.
 
 Structure of this repository
