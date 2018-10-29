@@ -18,9 +18,9 @@ section relates to numbered sections in the manuscript. See section
     rl_ver = rredlist::rl_version(key = rlkey)
 
     # print
-    #print(paste0(rl_count," ", "(version ",rl_ver,")"))
+    #print(paste0('Number of taxa on the Red List = ',rl_count," ", "(version ",rl_ver,")"))
 
-Number of taxa on the Red List =
+**Number of taxa on the Red List = 95922**
 
 *Total number of species on the Red List:*
 
@@ -56,10 +56,7 @@ to remove infra rank and populations to get all species
     # print total number of 'species' on Red List
     rl_row = nrow(all_RL_species)
 
-    # print
-    print(paste0('Number of species on the Red List = ',rl_row))
-
-    ## [1] "Number of species on the Red List = 93577"
+**Number of species on the Red List = 93577**
 
 #### 1.1 Gaps in Red List coverage – why the missing species matter
 
@@ -78,10 +75,8 @@ plants and fungi. Source:
     # proportion vert species described that have been Red Listed
     prop.verts.RL = round((nrow(all.verts)/described.verts), digits = 2)
 
-    # print
-    print(paste0('Proportion of vertebrate species described that have been Red Listed = ',prop.verts.RL))
-
-    ## [1] "Proportion of vertebrate species described that have been Red Listed = 0.67"
+**Proportion of vertebrate species described that have been Red Listed =
+0.67**
 
 *Percentage of described invertebrates, plants and fungi species that
 have been Red Listed:*
@@ -95,28 +90,23 @@ have been Red Listed:*
 
     ## [1] "Number of plant species Red Listed = 25452"
 
+**Number of plant species Red Listed = 25452**
+
     # fungi and protists covered in two kingdoms so use 'which' and pipe symbol to combine
     all.fungi = all_RL_species[ which(all_RL_species$kingdom_name == "FUNGI" | all_RL_species$kingdom_name == "CHROMISTA"),]
     all.fungi.count = nrow(all.fungi)
 
-    # print
-    print(paste0('Number of fungi species Red Listed = ',all.fungi.count))
-
-    ## [1] "Number of fungi species Red Listed = 71"
+**Number of fungi species Red Listed= 71**
 
     # inverts is any animalia that isn't phylum CHORDATA so use kingdom == ANIMALIA & phylum != CHORDATA
     all.inverts = all_RL_species[ which(all_RL_species$kingdom_name == "ANIMALIA" & all_RL_species$phylum_name != "CHORDATA"),]
     all.inverts.count = nrow(all.inverts)
 
-    # print
-    print(paste0('Number of invertebrate species Red Listed = ',all.inverts.count))
-
-    ## [1] "Number of invertebrate species Red Listed = 21498"
+**Number of invertebrate species Red Listed = 21498**
 
     all.RL.nonverts =  all.plants.count + all.fungi.count + all.inverts.count
-    all.RL.nonverts
 
-    ## [1] 47021
+**Number of != vertebrate species Red Listed = 47021**
 
 Estimated number of described species of invertebrates, plants and
 fungi. Source:
@@ -138,10 +128,8 @@ estimates. Phytotaxa 272, 82–88.
     # proportion described invertebrates, plants and fungi species that have been Red Listed
     prop.nonverts.RL = all.RL.nonverts/described.nonvert
 
-    # print proportion vert species described that have been Red Listed
-    prop.nonverts.RL * 100
-
-    ## [1] 2.700492
+**Proportion of vertebrates described that have been Red Listed =
+2.7004924**
 
 #### 1.2 Growing the Red List - vascular plants as a case study
 
@@ -150,9 +138,7 @@ number of vascular plants i.e. Nic Lughadha et al 2016
 
     vasc_plants = subset(all.plants, all.plants$phylum_name == "TRACHEOPHYTA") #PHYLUM = TRACHEOPHYTA (vascular plants)
 
-    nrow(vasc_plants)/described.vasc.plants.niclughadha2016*100
-
-    ## [1] 6.588718
+**Proportion of vascular plants that have been Red Listed = 6.5887179**
 
 #### 2.3 Batch assessment upload with ‘SIS Connect’
 
@@ -160,14 +146,10 @@ Percentage of assessments published on the Red List via SIS Connect
 Craig Hilton-Taylor, pers. comm (10th August 2018)
 
     sis_connect_pub = 509
-    print(paste0('Assessments published via SIS Connect = ',sis_connect_pub))
-
-    ## [1] "Assessments published via SIS Connect = 509"
-
     sis_connect_pre_pub = 915
-    print(paste0('Assessments in SIS Connect pipeline = ',sis_connect_pre_pub))
 
-    ## [1] "Assessments in SIS Connect pipeline = 915"
+**Assessments published via SIS Connect = 509** **Assessments in SIS
+Connect pipeline = 915**
 
 #### 2.4 Inclusion of assessments in languages other than English
 
@@ -179,9 +161,9 @@ List of mega diverse countries derived from this source:
 
     # get the number of megadiverse countries that speak Spanish, Portuguese or French as main language
     country.count = nrow(subset(mega_diverse_countries, mega_diverse_countries$Span.Port.or.French == "Yes"))
-    country.count
 
-    ## [1] 7
+**Number of mega diverse countries that Spanish, Portuguese or French =
+7**
 
     # Red list assessments in other languages
     brazil_2016_prt = 20
