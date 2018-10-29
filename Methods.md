@@ -1,7 +1,7 @@
 This document describes methods used in the paper **'Progress,
 challenges and opportunities for plant Red Listing'**. Each numbered
 section relates to numbered sections in the manuscript. See section
-[04\_outputs](../blob/master/04_outputs) for the manuscript.
+[04\_outputs](../tree/master/02_docs) for the manuscript.
 
 ### 1. Introduction
 
@@ -72,10 +72,10 @@ plants and fungi. Source:
     described.verts = 69276
 
     # proportion vert species described that have been Red Listed
-    prop.verts.RL = round((nrow(all.verts)/described.verts), digits = 2)
+    prop.verts.RL = round((nrow(all.verts)/described.verts)*100, digits = 2)
 
 **Proportion of vertebrate species described that have been Red Listed =
-0.67**
+67.2%**
 
 *Percentage of described invertebrates, plants and fungi species that
 have been Red Listed:*
@@ -125,9 +125,10 @@ estimates. Phytotaxa 272, 82–88.
     described.nonvert = described.vasc.plants.niclughadha2016 + described.fungi + described.inverts
 
     # proportion described invertebrates, plants and fungi species that have been Red Listed
-    prop.nonverts.RL = all.RL.nonverts/described.nonvert
+    prop.nonverts.RL = all.RL.nonverts/described.nonvert*100
 
-**Proportion of vertebrates described that have been Red Listed = 2.7**
+**Proportion of invertebrates described that have been Red Listed =
+2.7%**
 
 ### 1.2 Growing the Red List - vascular plants as a case study
 

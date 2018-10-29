@@ -5,10 +5,9 @@ date: 29th October 2018
 output: md_document
 ---
 
-This document describes methods used in the paper **'Progress, challenges and opportunities for plant Red Listing'**. Each numbered section relates to numbered sections in the manuscript. See section [04_outputs](../blob/master/04_outputs) for the manuscript.
+This document describes methods used in the paper **'Progress, challenges and opportunities for plant Red Listing'**. Each numbered section relates to numbered sections in the manuscript. See section [04_outputs](../tree/master/02_docs) for the manuscript.
 
 ### 1. Introduction 
-
 
 ```{r echo=FALSE}
 # RL key needed for download. ***change this to your own key- get from iucn.org 
@@ -33,6 +32,8 @@ rl_ver = rredlist::rl_version(key = rlkey)
 
 
 **Red List version = `r rl_ver`**
+
+
 
 
 *Total number of species on the Red List:*
@@ -76,6 +77,10 @@ rl_row = nrow(all_RL_species)
 
 **Number of species on the Red List = `r rl_row `**
 
+
+
+
+
 ### 1.1 Gaps in Red List coverage – why the missing species matter
 *Percentage of described vertebrate species that have been Red Listed:*
 
@@ -90,10 +95,11 @@ all.verts = subset(all_RL_species, all_RL_species$phylum_name == "CHORDATA")
 described.verts = 69276
 
 # proportion vert species described that have been Red Listed
-prop.verts.RL = round((nrow(all.verts)/described.verts), digits = 2)
+prop.verts.RL = round((nrow(all.verts)/described.verts)*100, digits = 2)
 ```
 
-**Proportion of vertebrate species described that have been Red Listed = `r prop.verts.RL `**
+**Proportion of vertebrate species described that have been Red Listed = `r prop.verts.RL `%**
+
 
 
 *Percentage of described invertebrates, plants and fungi species that have been Red Listed:*
@@ -109,6 +115,8 @@ print(paste0('Number of plant species Red Listed = ',all.plants.count))
 
 **Number of plant species Red Listed = `r all.plants.count `**
 
+
+
 ```{r}
 # fungi and protists covered in two kingdoms so use 'which' and pipe symbol to combine
 all.fungi = all_RL_species[ which(all_RL_species$kingdom_name == "FUNGI" | all_RL_species$kingdom_name == "CHROMISTA"),]
@@ -116,6 +124,8 @@ all.fungi.count = nrow(all.fungi)
 ```
 
 **Number of fungi species Red Listed= `r all.fungi.count `**
+
+
 
 ```{r}
 # inverts is any animalia that isn't phylum CHORDATA so use kingdom == ANIMALIA & phylum != CHORDATA
@@ -125,9 +135,13 @@ all.inverts.count = nrow(all.inverts)
 
 **Number of invertebrate species Red Listed = `r all.inverts.count `**
 
+
+
 ```{r}
 all.RL.nonverts =  all.plants.count + all.fungi.count + all.inverts.count
 ```
+
+
 
 **Number of != vertebrate species Red Listed = `r all.RL.nonverts `**
 
@@ -146,10 +160,12 @@ described.inverts = 1305250
 described.nonvert = described.vasc.plants.niclughadha2016 + described.fungi + described.inverts
 
 # proportion described invertebrates, plants and fungi species that have been Red Listed
-prop.nonverts.RL = all.RL.nonverts/described.nonvert
+prop.nonverts.RL = all.RL.nonverts/described.nonvert*100
 ```
 
-**Proportion of vertebrates described that have been Red Listed = `r round((prop.nonverts.RL * 100), digits = 2) `**
+**Proportion of invertebrates described that have been Red Listed = `r round((prop.nonverts.RL), digits = 2) `%**
+
+
 
 ### 1.2 Growing the Red List - vascular plants as a case study
 filter on vascular plants only and compare with best estimate for total number of vascular plants i.e. Nic Lughadha et al 2016
@@ -157,6 +173,7 @@ filter on vascular plants only and compare with best estimate for total number o
 vasc_plants = subset(all.plants, all.plants$phylum_name == "TRACHEOPHYTA") #PHYLUM = TRACHEOPHYTA (vascular plants)
 ```
 **Proportion of vascular plants that have been Red Listed = `r nrow(vasc_plants)/described.vasc.plants.niclughadha2016*100`**
+
 
 
 ### 2.3 Batch assessment upload with ‘SIS Connect’
@@ -169,6 +186,7 @@ sis_connect_pre_pub = 915
 ```
 **Assessments published via SIS Connect = `r sis_connect_pub`**
 **Assessments in SIS Connect pipeline = `r sis_connect_pre_pub`**
+
 
 
 ### 2.4 Inclusion of assessments in languages other than English
@@ -185,11 +203,15 @@ country.count = nrow(subset(mega_diverse_countries, mega_diverse_countries$Span.
 ```
 **Number of mega diverse countries that Spanish, Portuguese or French = `r country.count`**
 
+
+
 ```{r}
 # Red list assessments in other languages
 brazil_2016_prt = 20
 haiti_2018_1_frnch = 38
 ```
+
+
 
 ### 2.5 Spatial tools support Red List automation
 Craig Hilton-Taylor, pers. comm (10th August 2018)
@@ -197,6 +219,8 @@ Craig Hilton-Taylor, pers. comm (10th August 2018)
 spatial_tools_citations = 1939
 ```
 **Number of publications citing spatial tools `r spatial_tools_citations`**
+
+
 
 ### 2.6 Linking new  species and Red List assessment publications 
 To get the average number of new taxa described every year, data were downloaded from IPNI Beta site: https://beta.ipni.org/
