@@ -289,7 +289,7 @@ plot
 tax.nov.year.mean = round((mean(tax.nov.year$Count)),0)
 ```
 
-**The discovery of new plants occurs at a fairly consistent rate, with a mean of `r tax.nov.year.mean` per year (1999 – 2017)**
+**The description of new plants occurs at a fairly consistent rate, with a mean of `r tax.nov.year.mean` per year (1999 – 2017)**
 
 Kew Bulletin example - look at year range 2003 - 2017 (2003 onwards as this is when 3.1 assessments first came in for plants). How many have been red listed?
 
@@ -320,7 +320,7 @@ How much time had elapsed between formal description of a species and publicatio
 We need to get IPNI IDs for red list palnt species and then match that with IPNI file so that we have year described and year on red list
 
 ```{r}
-# 
+# merge all.plants.IPNI with full IPNI list
 ```
 
 

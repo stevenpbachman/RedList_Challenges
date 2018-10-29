@@ -266,8 +266,8 @@ Plot number of newly described taxa per year
     # get average number of described tax now between 1999 and 2017
     tax.nov.year.mean = round((mean(tax.nov.year$Count)),0)
 
-**The discovery of new plants occurs at a fairly consistent rate, with a
-mean of 2242 per year (1999 – 2017)**
+**The description of new plants occurs at a fairly consistent rate, with
+a mean of 2242 per year (1999 – 2017)**
 
 Kew Bulletin example - look at year range 2003 - 2017 (2003 onwards as
 this is when 3.1 assessments first came in for plants). How many have
@@ -310,4 +310,4 @@ were labelled ‘Old’.
 We need to get IPNI IDs for red list palnt species and then match that
 with IPNI file so that we have year described and year on red list
 
-    #
+    # merge all.plants.IPNI with full IPNI list
