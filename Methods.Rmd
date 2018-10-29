@@ -266,8 +266,10 @@ tax.nov = subset(IPNI_raw, IPNI_raw$citation.type == "tax. nov.")
 
 Summarise number of tax.nov by year
 ```{r echo=FALSE}
+# load library
 library(tidyverse)
 ```
+
 
 ```{r}
 tax.nov.year = tax.nov %>% dplyr::group_by(published) %>% dplyr::count(published)
@@ -317,9 +319,12 @@ nrow(KB_RL_joined)/nrow(KewBull_tax.nov)*100
 
 How much time had elapsed between formal description of a species and publication of an assessment for that species on the Red List.Species described and then assessed within 5 years were labelled as ‘New’, and species that were assessed more than 5 years since they were described were labelled ‘Old’.
 
-We need to get IPNI IDs for red list palnt species and then match that with IPNI file so that we have year described and year on red list
+We need to get IPNI IDs for red list plant species and then match that with IPNI file so that we have year described and year on red list
 
 ```{r}
+# describe method to get IPNI year for all species on the Red List
+# Open refine
+
 # merge all.plants.IPNI with full IPNI list
 ```
 
