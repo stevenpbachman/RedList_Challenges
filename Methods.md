@@ -137,6 +137,9 @@ filter on vascular plants only and compare with best estimate for total
 number of vascular plants i.e. Nic Lughadha et al 2016
 
     vasc_plants = subset(all.plants, all.plants$phylum_name == "TRACHEOPHYTA") #PHYLUM = TRACHEOPHYTA (vascular plants)
+    nrow(vasc_plants)/described.vasc.plants.niclughadha2016*100
+
+    ## [1] 6.588718
 
 **Proportion of vascular plants that have been Red Listed = 6.5887179**
 

@@ -171,6 +171,7 @@ prop.nonverts.RL = all.RL.nonverts/described.nonvert*100
 filter on vascular plants only and compare with best estimate for total number of vascular plants i.e. Nic Lughadha et al 2016
 ```{r}
 vasc_plants = subset(all.plants, all.plants$phylum_name == "TRACHEOPHYTA") #PHYLUM = TRACHEOPHYTA (vascular plants)
+nrow(vasc_plants)/described.vasc.plants.niclughadha2016*100
 ```
 **Proportion of vascular plants that have been Red Listed = `r nrow(vasc_plants)/described.vasc.plants.niclughadha2016*100`**
 
