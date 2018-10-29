@@ -28,8 +28,10 @@ rl_count = rl_count$count
 rl_ver = rredlist::rl_version(key = rlkey)
 
 # print
-print(paste0('Number of taxa on the Red List = ',rl_count," ", "(version ",rl_ver,")"))
+#print(paste0(rl_count," ", "(version ",rl_ver,")"))
 ```
+
+Number of taxa on the Red List = `r print(paste0(rl_count," ", "(version ",rl_ver,")")) `
 
 
 *Total number of species on the Red List:*

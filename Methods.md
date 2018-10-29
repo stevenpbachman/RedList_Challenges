@@ -18,9 +18,9 @@ section relates to numbered sections in the manuscript. See section
     rl_ver = rredlist::rl_version(key = rlkey)
 
     # print
-    print(paste0('Number of taxa on the Red List = ',rl_count," ", "(version ",rl_ver,")"))
+    #print(paste0(rl_count," ", "(version ",rl_ver,")"))
 
-    ## [1] "Number of taxa on the Red List = 95922 (version 2018-1)"
+Number of taxa on the Red List =
 
 *Total number of species on the Red List:*
 
