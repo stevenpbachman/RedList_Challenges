@@ -3,7 +3,8 @@ challenges and opportunities for plant Red Listing'**. Each numbered
 section relates to numbered sections in the manuscript. See section
 **'04\_outputs'** for the manuscript.
 
-#### 1. Introduction
+1. Introduction
+---------------
 
 *Total number of taxa on the Red List:*
 
@@ -58,7 +59,8 @@ to remove infra rank and populations to get all species
 
 **Number of species on the Red List = 93577**
 
-#### 1.1 Gaps in Red List coverage – why the missing species matter
+1.1 Gaps in Red List coverage – why the missing species matter
+--------------------------------------------------------------
 
 *Percentage of described vertebrate species that have been Red Listed:*
 
@@ -128,10 +130,10 @@ estimates. Phytotaxa 272, 82–88.
     # proportion described invertebrates, plants and fungi species that have been Red Listed
     prop.nonverts.RL = all.RL.nonverts/described.nonvert
 
-**Proportion of vertebrates described that have been Red Listed =
-2.7004924**
+**Proportion of vertebrates described that have been Red Listed = 2.7**
 
-#### 1.2 Growing the Red List - vascular plants as a case study
+1.2 Growing the Red List - vascular plants as a case study
+----------------------------------------------------------
 
 filter on vascular plants only and compare with best estimate for total
 number of vascular plants i.e. Nic Lughadha et al 2016
@@ -140,7 +142,8 @@ number of vascular plants i.e. Nic Lughadha et al 2016
 
 **Proportion of vascular plants that have been Red Listed = 6.5887179**
 
-#### 2.3 Batch assessment upload with ‘SIS Connect’
+2.3 Batch assessment upload with ‘SIS Connect’
+----------------------------------------------
 
 Percentage of assessments published on the Red List via SIS Connect
 Craig Hilton-Taylor, pers. comm (10th August 2018)
@@ -151,7 +154,8 @@ Craig Hilton-Taylor, pers. comm (10th August 2018)
 **Assessments published via SIS Connect = 509** **Assessments in SIS
 Connect pipeline = 915**
 
-#### 2.4 Inclusion of assessments in languages other than English
+2.4 Inclusion of assessments in languages other than English
+------------------------------------------------------------
 
 List of mega diverse countries derived from this source:
 <http://www.biodiversitya-z.org/content/megadiverse-countries.pdf>
@@ -168,3 +172,23 @@ List of mega diverse countries derived from this source:
     # Red list assessments in other languages
     brazil_2016_prt = 20
     haiti_2018_1_frnch = 38
+
+2.5 Spatial tools support Red List automation
+---------------------------------------------
+
+Craig Hilton-Taylor, pers. comm (10th August 2018)
+
+    spatial_tools_citations = 1939
+
+**Number of publications citing spatial tools 1939**
+
+2.6 Linking new species and Red List assessment publications
+------------------------------------------------------------
+
+To get the average number of new taxa described every year, data were
+downloaded from IPNI Beta site: <https://beta.ipni.org/>
+
+A query was made for each year, with a filter on 'Specific' taxa
+(species). A csv for each year from 1999 - 2017 inclusive was
+downloaded. See 01\_data folder
+<https://github.com/stevenpbachman/RedList_Challenges/tree/master/01_data>
