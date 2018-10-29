@@ -183,6 +183,8 @@ sis_connect_pub = 509
 sis_connect_pre_pub = 915
 ```
 **Assessments published via SIS Connect = `r sis_connect_pub`**
+
+
 **Assessments in SIS Connect pipeline = `r sis_connect_pre_pub`**
 
 
@@ -216,7 +218,7 @@ Craig Hilton-Taylor, pers. comm (10th August 2018)
 ```{r}
 spatial_tools_citations = 1939
 ```
-**Number of publications citing spatial tools `r spatial_tools_citations`**
+**Number of publications citing spatial tools = `r spatial_tools_citations`**
 
 
 
@@ -263,8 +265,11 @@ tax.nov = subset(IPNI_raw, IPNI_raw$citation.type == "tax. nov.")
 ```
 
 Summarise number of tax.nov by year
-```{r}
+```{r echo=FALSE}
 library(tidyverse)
+```
+
+```{r}
 tax.nov.year = tax.nov %>% dplyr::group_by(published) %>% dplyr::count(published)
 ```
 
