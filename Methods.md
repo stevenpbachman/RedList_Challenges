@@ -1,7 +1,7 @@
 This document describes methods used in the paper **'Progress,
 challenges and opportunities for plant Red Listing'**. Each numbered
 section relates to numbered sections in the manuscript. See section
-**'04\_outputs'** for the manuscript.
+[04\_outputs](../blob/master/04_outputs) for the manuscript.
 
 ### 1. Introduction
 
@@ -17,7 +17,9 @@ section relates to numbered sections in the manuscript. See section
     # note the version of the Red List
     rl_ver = rredlist::rl_version(key = rlkey)
 
-**Number of taxa on the Red List = 95922** **Red List version = 2018-1**
+**Number of taxa on the Red List = 95922**
+
+**Red List version = 2018-1**
 
 *Total number of species on the Red List:*
 

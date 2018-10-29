@@ -5,7 +5,7 @@ date: 29th October 2018
 output: md_document
 ---
 
-This document describes methods used in the paper **'Progress, challenges and opportunities for plant Red Listing'**. Each numbered section relates to numbered sections in the manuscript. See section **'04_outputs'** for the manuscript.
+This document describes methods used in the paper **'Progress, challenges and opportunities for plant Red Listing'**. Each numbered section relates to numbered sections in the manuscript. See section [04_outputs](../blob/master/04_outputs) for the manuscript.
 
 ### 1. Introduction 
 
@@ -30,6 +30,8 @@ rl_ver = rredlist::rl_version(key = rlkey)
 ```
 
 **Number of taxa on the Red List = `r rl_count`**
+
+
 **Red List version = `r rl_ver`**
 
 
