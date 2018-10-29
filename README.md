@@ -1,11 +1,3 @@
-RedList\_Challenges
-===================
-
-Code for paper: Progress, challenges and opportunities for plant Red
-Listing
-
-`{r setup, include=FALSE} knitr::opts_chunk$set(echo = TRUE)`
-
 Introduction
 ============
 
@@ -17,10 +9,14 @@ All analysis was run in R aside from the workflow for Figure 1
 
 See **Methods\_description.Rmd** for detailed methods.
 
-Contents of this repository
-===========================
+Structure of this repository
+----------------------------
 
 All files in this repository are organised in the following folders:
+
+.gitignore : Files and directories to be ignored by git
+
+RedList\_Challenges.Rproj : RStudio project file
 
 #### 01\_data
 
