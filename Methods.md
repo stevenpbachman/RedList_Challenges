@@ -1,6 +1,7 @@
 This document describes methods used in the paper **'Progress,
 challenges and opportunities for plant Red Listing'**. Each numbered
-section header relates to numbered sections in the manuscript.
+section header relates to numbered sections in the manuscript. See
+section **'04\_outputs'** for hte manuscript.
 
 #### 1. Introduction
 
