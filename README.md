@@ -17,10 +17,10 @@ All files in this repository are organised in the following folders:
 #### README.md
 This file. Provides a description of the repository
 
-####.gitignore
+#### .gitignore
 Files and directories to be ignored by git
 
-####RedList\_Challenges.Rproj
+#### RedList\_Challenges.Rproj
 RStudio project file
 
 #### 01\_data
@@ -39,5 +39,5 @@ Various outputs or intermediate files
 Scripts with functions to execute analysis
 
 License
-----------------------------
+-------
 To be determined
