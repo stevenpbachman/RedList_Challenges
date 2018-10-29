@@ -3,8 +3,7 @@ challenges and opportunities for plant Red Listing'**. Each numbered
 section relates to numbered sections in the manuscript. See section
 **'04\_outputs'** for the manuscript.
 
-1. Introduction
----------------
+### 1. Introduction
 
 *Total number of taxa on the Red List:*
 
@@ -18,10 +17,7 @@ section relates to numbered sections in the manuscript. See section
     # note the version of the Red List
     rl_ver = rredlist::rl_version(key = rlkey)
 
-    # print
-    #print(paste0('Number of taxa on the Red List = ',rl_count," ", "(version ",rl_ver,")"))
-
-**Number of taxa on the Red List = 95922**
+**Number of taxa on the Red List = 95922** **Red List version = 2018-1**
 
 *Total number of species on the Red List:*
 
@@ -54,13 +50,12 @@ to remove infra rank and populations to get all species
     # subset to remove subspecies and infra ranks
     all_RL_species = subset(all_taxa, is.na(all_taxa$infra_rank) & is.na(all_taxa$population))
 
-    # print total number of 'species' on Red List
+    # Get total number of 'species' on Red List
     rl_row = nrow(all_RL_species)
 
 **Number of species on the Red List = 93577**
 
-1.1 Gaps in Red List coverage – why the missing species matter
---------------------------------------------------------------
+### 1.1 Gaps in Red List coverage – why the missing species matter
 
 *Percentage of described vertebrate species that have been Red Listed:*
 
@@ -132,8 +127,7 @@ estimates. Phytotaxa 272, 82–88.
 
 **Proportion of vertebrates described that have been Red Listed = 2.7**
 
-1.2 Growing the Red List - vascular plants as a case study
-----------------------------------------------------------
+### 1.2 Growing the Red List - vascular plants as a case study
 
 filter on vascular plants only and compare with best estimate for total
 number of vascular plants i.e. Nic Lughadha et al 2016
@@ -142,8 +136,7 @@ number of vascular plants i.e. Nic Lughadha et al 2016
 
 **Proportion of vascular plants that have been Red Listed = 6.5887179**
 
-2.3 Batch assessment upload with ‘SIS Connect’
-----------------------------------------------
+### 2.3 Batch assessment upload with ‘SIS Connect’
 
 Percentage of assessments published on the Red List via SIS Connect
 Craig Hilton-Taylor, pers. comm (10th August 2018)
@@ -154,8 +147,7 @@ Craig Hilton-Taylor, pers. comm (10th August 2018)
 **Assessments published via SIS Connect = 509** **Assessments in SIS
 Connect pipeline = 915**
 
-2.4 Inclusion of assessments in languages other than English
-------------------------------------------------------------
+### 2.4 Inclusion of assessments in languages other than English
 
 List of mega diverse countries derived from this source:
 <http://www.biodiversitya-z.org/content/megadiverse-countries.pdf>
@@ -173,8 +165,7 @@ List of mega diverse countries derived from this source:
     brazil_2016_prt = 20
     haiti_2018_1_frnch = 38
 
-2.5 Spatial tools support Red List automation
----------------------------------------------
+### 2.5 Spatial tools support Red List automation
 
 Craig Hilton-Taylor, pers. comm (10th August 2018)
 
@@ -182,8 +173,7 @@ Craig Hilton-Taylor, pers. comm (10th August 2018)
 
 **Number of publications citing spatial tools 1939**
 
-2.6 Linking new species and Red List assessment publications
-------------------------------------------------------------
+### 2.6 Linking new species and Red List assessment publications
 
 To get the average number of new taxa described every year, data were
 downloaded from IPNI Beta site: <https://beta.ipni.org/>
