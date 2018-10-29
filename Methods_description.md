@@ -22,3 +22,5 @@ section header relates to numbered sections in the manuscript.
     rredlist::rl_version(key = rlkey)
 
     ## [1] "2018-1"
+
+*Total number of species on the Red List:*

@@ -21,7 +21,8 @@ See **Methods_description.md** for detailed methods.
 
 | Item          | Description           |
 | ------------- |-------------|
-| .gitignore     | Files and directories to be ignored by git | 
+| .gitignore     | Description of this repository | 
+| README.md    | Files and directories to be ignored by git | 
 | RedList_Challenges.Rproj    | RStudio project file     | 
 | 01_data | Input data     | 
 | 02_docs | Manuscript and associated docs     | 
