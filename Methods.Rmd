@@ -5,7 +5,7 @@ date: 29th October 2018
 output: md_document
 ---
 
-This document describes methods used in the paper **'Progress, challenges and opportunities for plant Red Listing'**. Each numbered section relates to numbered sections in the manuscript. See section [04_outputs](../tree/master/02_docs) for the manuscript.
+This document describes methods used in the paper **'Progress, challenges and opportunities for plant Red Listing'**. Each numbered section relates to numbered sections in the manuscript. See section [04_docs](https://github.com/stevenpbachman/RedList_Challenges/tree/master/02_docs) for the manuscript.
 
 ### 1. Introduction 
 
@@ -225,14 +225,96 @@ spatial_tools_citations = 1939
 ### 2.6 Linking new  species and Red List assessment publications 
 To get the average number of new taxa described every year, data were downloaded from IPNI Beta site: https://beta.ipni.org/
 
-A query was made for each year, with a filter on 'Specific' taxa (species). A csv for each year from 1999 - 2017 inclusive was downloaded. See 01_data folder
-https://github.com/stevenpbachman/RedList_Challenges/tree/master/01_data
+A query was made for each year, with a filter on 'Specific' taxa (species). A csv for each year from 1999 - 2017 inclusive was downloaded. See [01_data](https://github.com/stevenpbachman/RedList_Challenges/tree/master/01_data) for raw data.
 
 
+```{r}
+# read in raw files. Thanks to Hayward Godwin: https://www.r-bloggers.com/merge-all-files-in-a-directory-using-r-into-a-single-dataframe/
+
+# get list of files, note full.names = true to get full path
+file_list = list.files("01_data/IPNI_downloads_25_07_2018/", full.names = TRUE)
+
+#create first dataset
+IPNI_raw <- read.csv("01_data/IPNI_downloads_25_07_2018/citations_1999.txt")
+
+# make blank DF with structure
+IPNI_raw = IPNI_raw[0,]
+
+for (file in file_list){
+       
+# if the merged dataset does exist, append to it
+  if (exists("IPNI_raw")){
+    temp_dataset <-read.csv(file)
+    IPNI_raw = rbind(IPNI_raw, temp_dataset)
+    rm(temp_dataset)
+  }
+}
+
+head(IPNI_raw)
+```
+
+```{r}
+# save this down
+path = getwd()
+respath = paste0(path,"/04_outputs/IPNI_raw.csv")
+write.table(IPNI_raw, respath,row.names = FALSE, na="", sep = ",")
+```
+
+Sbuset the IPNI data to just tax.nov.
+```{r}
+tax.nov = subset(IPNI_raw, IPNI_raw$citation.type == "tax. nov.")
+```
+
+Summarise number of tax.nov by year
+```{r}
+library(tidyverse)
+tax.nov.year = tax.nov %>% dplyr::group_by(published) %>% dplyr::count(published)
+tax.nov.year
+```
+
+Plot number of newly described taxa per year
+```{r}
+colnames(tax.nov.year)[which(names(tax.nov.year) == "published")] = "Year"
+colnames(tax.nov.year)[which(names(tax.nov.year) == "n")] = "Count"
+
+library(ggplot2)
+plot = ggplot(data = tax.nov.year) + 
+  geom_col(aes(x = Year, y = Count))
+plot
+```
+
+```{r}
+# get average number of described tax now between 1999 and 2017
+tax.nov.year.mean = mean(tax.nov.year$Count)
+```
+
+**The discovery of new plants occurs at a fairly consistent rate, with a mean of `r tax.nov.year.mean` per year (1999 – 2017)**
+
+Kew Bulletin example - look at year range 2003 - 2017 (2003 onwards as this is when 3.1 assessments first came in for plants). How many have been red listed?
+
+```{r}
+# get Kew Bull species 2003 - 2017
+#create first dataset
+KewBull_raw <- read.csv("01_data/IPNI_Kew_Bulletin_IPNI_downloads_25_07_2018/citations_KewBull_2003-2017.txt")
+
+# summarise to just tax.nov
+KewBull_tax.nov = subset(KewBull_raw, KewBull_raw$citation.type == "tax. nov.")
+nrow(KewBull_tax.nov)
+
+# change column names to match
+colnames(KewBull_tax.nov)[which(names(KewBull_tax.nov) == "scientific.name")] = "scientific_name"
+
+# now link to the red list to see how many have been assessed
+KB_RL_joined = merge(KewBull_tax.nov, all.plants, by = "scientific_name" )
+
+# Get totals
+nrow(KB_RL_joined)
+nrow(KB_RL_joined)/nrow(KewBull_tax.nov)*100
+```
+
+**Of the 1,234 newly described taxa published in Kew Bulletin from 2003–2017, only `r nrow(KewBull_tax.nov)` `r nrow(KB_RL_joined)/nrow(KewBull_tax.nov)*100` are currently on the Red List**
 
 
+What is ratio of old (>5 years) and new (<=5 years) assessments for each red list publicaiton year (Figure 2). 
 
-
-
-
-
+############### trying different method
