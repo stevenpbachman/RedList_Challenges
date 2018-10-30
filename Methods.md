@@ -11,8 +11,6 @@ for the manuscript.
     #install.packages("rredlist")
     library(rredlist)
 
-    ## Warning: package 'rredlist' was built under R version 3.5.1
-
     # get the total number of taxa
     rl_count = rredlist::rl_sp_count(key = rlkey)
     rl_count = rl_count$count
@@ -220,32 +218,14 @@ Subset the IPNI data to just tax.nov.
 
 Summarise number of tax.nov by year
 
-    ## Warning: package 'tidyverse' was built under R version 3.5.1
+    ## -- Attaching packages ------------------------------------------------------------------------------------------ tidyverse 1.2.1 --
 
-    ## -- Attaching packages -------------------------------------------------------------------- tidyverse 1.2.1 --
-
-    ## v ggplot2 3.0.0     v purrr   0.2.5
-    ## v tibble  1.4.2     v dplyr   0.7.6
-    ## v tidyr   0.8.1     v stringr 1.3.1
+    ## v ggplot2 3.0.0     v purrr   0.2.4
+    ## v tibble  1.4.2     v dplyr   0.7.5
+    ## v tidyr   0.8.0     v stringr 1.3.0
     ## v readr   1.1.1     v forcats 0.3.0
 
-    ## Warning: package 'ggplot2' was built under R version 3.5.1
-
-    ## Warning: package 'tibble' was built under R version 3.5.1
-
-    ## Warning: package 'tidyr' was built under R version 3.5.1
-
-    ## Warning: package 'readr' was built under R version 3.5.1
-
-    ## Warning: package 'purrr' was built under R version 3.5.1
-
-    ## Warning: package 'dplyr' was built under R version 3.5.1
-
-    ## Warning: package 'stringr' was built under R version 3.5.1
-
-    ## Warning: package 'forcats' was built under R version 3.5.1
-
-    ## -- Conflicts ----------------------------------------------------------------------- tidyverse_conflicts() --
+    ## -- Conflicts --------------------------------------------------------------------------------------------- tidyverse_conflicts() --
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -269,9 +249,8 @@ Plot number of newly described taxa per year
 **The description of new plants occurs at a fairly consistent rate, with
 a mean of 2242 per year (1999 – 2017)**
 
-Kew Bulletin example - look at year range 2003 - 2017 (2003 onwards as
-this is when 3.1 assessments first came in for plants). How many have
-been red listed?
+Kew Bulletin example - how many newly described taxa published in Kew
+Bulletin from 2003–2017 are currently on the Red List?
 
     # get Kew Bull species 2003 - 2017
     #create first dataset
@@ -299,7 +278,194 @@ been red listed?
     ## [1] 9.392713
 
 **Of the 1,234 newly described taxa published in Kew Bulletin from
-2003–2017, only 1235 9.3927126 are currently on the Red List**
+2003–2017, only 1235 9.39 are currently on the Red List**
+
+How much time had elapsed between formal description of a species and
+publication of an assessment for that species on the Red List? Species
+described and then assessed within 5 years were labelled as ‘New’, and
+species that were assessed more than 5 years since they were described
+were labelled ‘Old’.
+
+Use [POWO](http://www.plantsoftheworldonline.org/) API to assign IPNI
+IDs to Red List plant names. Then use IPNI ID to get date/year that
+plant name description was published Compare assessment year with name
+description publication year
+
+    ### Query Red List binomials against POWO to see taxonomic status according to POWO
+    ### POWO = Plants of the World Online
+
+    library(jsonlite)
+    library(tidyverse)
+    library(plyr)
+
+    check.accepted.POWO = function(binomial) {
+      
+      #binomial = "Solanum polygamum"
+      
+      # use ID full name to search API  
+      full_url =  paste("http://plantsoftheworldonline.org/api/1/search?q=names:", binomial, sep = "")
+      
+      # get raw json data
+      raw.data <- readLines(full_url, warn = "F", encoding = "UTF-8")
+      
+      # organise
+      rd <- fromJSON(raw.data)
+      
+      if (length(rd$results) == 0) {
+        # add new column to results and call it warning
+        
+        accepted = "NA"          
+        author = ""  
+        kingdom = ""  
+        name = ""  
+        rank  = "" 
+        #synonymOf = ""
+        base_url = ""    
+        IPNI_ID = ""
+        search_name = binomial  
+        results = data.frame(accepted,author, kingdom, name, rank, base_url, IPNI_ID,search_name)
+        
+      } else {
+        
+        # make data frame
+        results = as.data.frame(rd$results)
+        
+        # add original search term
+        results$search_name = binomial
+        
+        # returns null because there is more than one result - come back to this later and print out extra rows
+        if (nrow(results) >1) {
+          
+          accepted = "FALSE"          
+          author = ""  
+          kingdom = ""  
+          name = ""  
+          rank  = "" 
+          #synonymOf = ""
+          base_url = ""    
+          IPNI_ID = ""
+          search_name = binomial  
+          results = data.frame(accepted,author, kingdom, name, rank, base_url, IPNI_ID,search_name)
+          
+        } else {
+          
+          # PROBLEM HERE - var with no author - replace with blank field?
+          if (!"author" %in% colnames(results)) {
+            results$author = NA
+          }
+          
+          # only include these fields - you don't want synonym of
+          results = subset(results, select=c(accepted, author, kingdom,name,rank, url, search_name))
+          
+          # split url to get url and IPNI_ID
+          results = results %>% separate(url, into = c("base_url", "IPNI_ID"), sep = "names:")
+          
+          # take out any results where it matched on something that wasn't species 
+          #results = subset(results, rank == "Species") 
+          
+          # check if 
+          if (nrow(results) < 1) {
+            # add new column to results and call it warning
+            
+            accepted = "NA"          
+            author = ""  
+            kingdom = ""  
+            name = ""  
+            rank  = "" 
+            #synonymOf = ""
+            base_url = ""    
+            IPNI_ID = ""
+            search_name = binomial  
+            results = data.frame(accepted,author, kingdom, name, rank, base_url, IPNI_ID,search_name)
+            
+          }
+          # make data frame
+          results = as.data.frame(results)
+        }
+        
+        return(results)
+        
+      }
+    }
+
+    #check if names are accepted on POWO - query on the binomial field - change this for exact column name rather than col number?
+    checkACC_apply = lapply(all.plants[,8],check.accepted.POWO)
+    accepted.result = do.call(rbind.fill, checkACC_apply)
+
+    # reduce to just the rows with IPNI IDs - convert blanks to NA first
+    accepted.result$IPNI_ID[accepted.result$IPNI_ID==""] = NA
+
+    # omit NAs
+    all.plants.IPNI = accepted.result %>% na.omit()
+
+    # reduce to non null results
+    all.plants.IPNI = subset(all.plants.IPNI, rank =="Species") 
+
+    # keep accepted red_list in memory, but save as hard copy for later use if necessary
+    path = getwd()
+    respath = paste0(path,"/all.plants.IPNI.csv")
+    write.table(all.plants.IPNI, respath,row.names = FALSE, na="", sep = ",")
+
+Now that we have IPNI IDs for the Red List assessments for plants, we
+need to pull out the date/year of publication so we can compare
+assessment date vs publication date.
+
+Use [OpenRefine](http://openrefine.org/) to access structured IPNI data.
+Thanks to [Nicky Nicholson](https://github.com/nickynicolson) for
+method.
+
+1.  Call IPNI to get structured data for each record:
+
+<!-- -->
+
+1.  Click dropdown next to the IPNI id, select “Edit column” -&gt; “Add
+    column by fetching URLs”
+2.  Build the URL by entering the following into the expression box:
+    '<http://ipni.org/urn:lsid:ipni.org:names>:'+value
+3.  Give your new column a title (e.g. “IPNI LSID data”) and a throttle
+    delay of 1000 milliseconds, click OK You should now have a new
+    column with RDF-XML formatted data – these cells will be massive but
+    you can drop (or hide) the column after the next step is completed
+
+<!-- -->
+
+1.  Extract the publication year from the RDF XML:
+
+<!-- -->
+
+1.  Click the dropdown next to the “IPNI LSID data” column, select “Edit
+    column” -&gt; “Add column based on this column”
+2.  Select the year tag in the RDF XML and extract its contents: type
+    in: value.parseHtml().select("tn|year")\[0\].htmlText()
+3.  Give your new column a title (‘publication year’) and click OK
+
+Save as
+[all.plants.IPNI.csv](https://github.com/stevenpbachman/RedList_Challenges/blob/master/01_data/all.plants.IPNI.csv)
+
+Now import
+
+    # import the RL data with IPNI ID and year
+    path = getwd()
+    all_plants_IPNI <- read_csv(paste0(path,"/01_data/all.plants.IPNI.csv"))
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   accepted = col_integer(),
+    ##   author = col_character(),
+    ##   kingdom = col_character(),
+    ##   name = col_character(),
+    ##   rank = col_character(),
+    ##   base_url = col_character(),
+    ##   IPNI_ID = col_character(),
+    ##   search_name = col_character()
+    ## )
+
+    IPNI_year = all_plants_IPNI
+
+    # change column name so that you can merge with full red list data
+    colnames(IPNI_year)[which(names(IPNI_year) == "search_name")] = "scientific_name"
+
+### 3.3 Supporting the Plant assessment champions –Specialist Groups and Authorities
 
 How much time had elapsed between formal description of a species and
 publication of an assessment for that species on the Red List.Species
@@ -307,7 +473,10 @@ described and then assessed within 5 years were labelled as ‘New’, and
 species that were assessed more than 5 years since they were described
 were labelled ‘Old’.
 
-We need to get IPNI IDs for red list palnt species and then match that
+We need to get IPNI IDs for red list plant species and then match that
 with IPNI file so that we have year described and year on red list
+
+    # describe method to get IPNI year for all species on the Red List
+    # Open refine
 
     # merge all.plants.IPNI with full IPNI list

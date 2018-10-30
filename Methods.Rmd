@@ -325,62 +325,162 @@ nrow(KB_RL_joined)/nrow(KewBull_tax.nov)*100
 
 How much time had elapsed between formal description of a species and publication of an assessment for that species on the Red List? Species described and then assessed within 5 years were labelled as ‘New’, and species that were assessed more than 5 years since they were described were labelled ‘Old’. 
 
-Link the Red List plant names to IPNI so that we can get year of description 
-```{r}
+Use [POWO](http://www.plantsoftheworldonline.org/) API to assign IPNI IDs to Red List plant names.
+Then use IPNI ID to get date/year that plant name description was published
+Compare assessment year with name description publication year
 
-# here we run the POWO script against the Red list list of names to get matches. 
-# could also try other ways to match - IPNI, TPL via GBIF?
 
-# the rest is just linking IPNI IDs
+
+```{r eval=FALSE}
+### Query Red List binomials against POWO to see taxonomic status according to POWO
+### POWO = Plants of the World Online
+
+library(jsonlite)
+library(tidyverse)
+library(plyr)
+
+check.accepted.POWO = function(binomial) {
+  
+  #binomial = "Solanum polygamum"
+  
+  # use ID full name to search API  
+  full_url =  paste("http://plantsoftheworldonline.org/api/1/search?q=names:", binomial, sep = "")
+  
+  # get raw json data
+  raw.data <- readLines(full_url, warn = "F", encoding = "UTF-8")
+  
+  # organise
+  rd <- fromJSON(raw.data)
+  
+  if (length(rd$results) == 0) {
+    # add new column to results and call it warning
+    
+    accepted = "NA"          
+    author = ""  
+    kingdom = ""  
+    name = ""  
+    rank  = "" 
+    #synonymOf = ""
+    base_url = ""    
+    IPNI_ID = ""
+    search_name = binomial  
+    results = data.frame(accepted,author, kingdom, name, rank, base_url, IPNI_ID,search_name)
+    
+  } else {
+    
+    # make data frame
+    results = as.data.frame(rd$results)
+    
+    # add original search term
+    results$search_name = binomial
+    
+    # returns null because there is more than one result - come back to this later and print out extra rows
+    if (nrow(results) >1) {
+      
+      accepted = "FALSE"          
+      author = ""  
+      kingdom = ""  
+      name = ""  
+      rank  = "" 
+      #synonymOf = ""
+      base_url = ""    
+      IPNI_ID = ""
+      search_name = binomial  
+      results = data.frame(accepted,author, kingdom, name, rank, base_url, IPNI_ID,search_name)
+      
+    } else {
+      
+      # PROBLEM HERE - var with no author - replace with blank field?
+      if (!"author" %in% colnames(results)) {
+        results$author = NA
+      }
+      
+      # only include these fields - you don't want synonym of
+      results = subset(results, select=c(accepted, author, kingdom,name,rank, url, search_name))
+      
+      # split url to get url and IPNI_ID
+      results = results %>% separate(url, into = c("base_url", "IPNI_ID"), sep = "names:")
+      
+      # take out any results where it matched on something that wasn't species 
+      #results = subset(results, rank == "Species") 
+      
+      # check if 
+      if (nrow(results) < 1) {
+        # add new column to results and call it warning
+        
+        accepted = "NA"          
+        author = ""  
+        kingdom = ""  
+        name = ""  
+        rank  = "" 
+        #synonymOf = ""
+        base_url = ""    
+        IPNI_ID = ""
+        search_name = binomial  
+        results = data.frame(accepted,author, kingdom, name, rank, base_url, IPNI_ID,search_name)
+        
+      }
+      # make data frame
+      results = as.data.frame(results)
+    }
+    
+    return(results)
+    
+  }
+}
+
+#check if names are accepted on POWO - query on the binomial field - change this for exact column name rather than col number?
+checkACC_apply = lapply(all.plants[,8],check.accepted.POWO)
+accepted.result = do.call(rbind.fill, checkACC_apply)
+
+# reduce to just the rows with IPNI IDs - convert blanks to NA first
+accepted.result$IPNI_ID[accepted.result$IPNI_ID==""] = NA
+
+# omit NAs
+all.plants.IPNI = accepted.result %>% na.omit()
+
+# reduce to non null results
+all.plants.IPNI = subset(all.plants.IPNI, rank =="Species") 
+
+# keep accepted red_list in memory, but save as hard copy for later use if necessary
+path = getwd()
+respath = paste0(path,"/all.plants.IPNI.csv")
+write.table(all.plants.IPNI, respath,row.names = FALSE, na="", sep = ",")
 ```
 
+Now that we have IPNI IDs for the Red List assessments for plants, we need to pull out the date/year of 
+publication so we can compare assessment date vs publication date. 
 
+Use [OpenRefine](http://openrefine.org/) to access structured IPNI data.
+Thanks to [Nicky Nicholson](https://github.com/nickynicolson) for method.
+
+1.	Call IPNI to get structured data for each record:
+a.	Click dropdown next to the IPNI id, select “Edit column” ->  “Add column by fetching URLs”
+b.	Build the URL by entering the following into the expression box:
+'http://ipni.org/urn:lsid:ipni.org:names:'+value
+c.	Give your new column a title (e.g. “IPNI LSID data”) and a throttle delay of 1000 milliseconds, click OK
+You should now have a new column with RDF-XML formatted data – these cells will be massive but you can drop (or hide) the column after the next step is completed
+2)	Extract the publication year from the RDF XML:
+a.	Click the dropdown next to the “IPNI LSID data” column, select “Edit column” -> “Add column based on this column”
+b.	Select the year tag in the RDF XML and extract its contents: type in:
+value.parseHtml().select("tn|year")[0].htmlText()
+c.	Give your new column a title (‘publication year’) and click OK
+
+Save as [all.plants.IPNI.csv](https://github.com/stevenpbachman/RedList_Challenges/blob/master/01_data/all.plants.IPNI.csv)
+
+Now import 
 
 ```{r}
 # import the RL data with IPNI ID and year
-RedList2018_1_powo_species_IPNI_LSID <- read.csv("C:/Users/sb42kg/OneDrive - The Royal Botanic Gardens, Kew/02_Publications/PhD/Major_Corrections/RedList_challenges/01_data/RedList2018_1_powo_species_IPNI_LSID.csv")
+path = getwd()
+all_plants_IPNI <- read_csv(paste0(path,"/01_data/all.plants.IPNI.csv"))
 
-IPNI_year = RedList2018_1_powo_species_IPNI_LSID
+IPNI_year = all_plants_IPNI
 
 # change column name so that you can merge with full red list data
 colnames(IPNI_year)[which(names(IPNI_year) == "search_name")] = "scientific_name"
 
-# merge IPNI year and Red List 
-merged_taxnov_RL = merge(IPNI_year, all.plants.RL_full, by = "scientific_name")
 
-# now take the described year away from the published year
-merged_taxnov_RL_diff = data.frame(diff = merged_taxnov_RL$published_year - merged_taxnov_RL$Year)
-diff = cbind(merged_taxnov_RL_diff, merged_taxnov_RL)
-
-# now add column for New (5 years or less) and Old (>5 years)
-diff$age[diff$diff < 6] <- "New"
-diff$age[diff$diff >=6] <- "Old"
-diff$age[is.na(diff$diff)] <- "Unknown"
-
-diffplot = subset(diff, published_year > 2002 & published_year <2018, select=c(published_year, age))
-
-# adding in a single record to get a point for 2005 - must be another way to do this...
-extralev = data.frame(published_year = "2005", age = "Unknown")
-diffplot = rbind(diffplot, extralev)
-
-tax.nov.plot = subset(tax.nov.year, tax.nov.year$Year >="2003" & tax.nov.year$Year < "2018")
-RL_vasc_plants = subset(all.plants.RL_full, all.plants.RL_full$phylum == "TRACHEOPHYTA" )
-
-# now summarise the ratio of old and new for each red list assessment year
-library(ggplot2)
-plot = ggplot() + 
-  geom_bar(data = diffplot, aes(x = as.factor(published_year), fill = as.factor(age)), 
-           position = position_dodge(preserve = 'single')) + 
-  
-  labs(x = "Red List Publication Year", y = "Number of plant species assessments", fill = "") +
-  theme_minimal() +
-  scale_fill_manual(values = c("New" = "#f37735", "Old" = "#ffc425", "Unknown" = "light grey")) +
-    geom_point(data = tax.nov.plot, aes(x = as.factor(year), y = Count), stat = "identity", size = 2, shape = 16) +
-  #scale_colour_manual(name = "Year", labels = "test", values = "black") +
-  scale_x_discrete(expand = c(0, 0)) + scale_y_continuous(expand = c(0,100)) 
-  
-plot
-  
 ```
 
 
