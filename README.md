@@ -2,7 +2,7 @@ Introduction
 ============
 
 This repository contains code used in the paper: **"Progress, challenges
-and opportunities for plant Red Listing"**.
+and opportunities for Red Listing"**.
 
 All analysis was run in R aside from the workflow for Figure 1
 (Microsoft powerpoint) and the map for Figure 3 (ArcMap 10.3).
