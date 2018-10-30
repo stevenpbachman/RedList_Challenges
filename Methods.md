@@ -102,7 +102,7 @@ have been Red Listed:*
     # combine all the non-vertebrates 
     all.RL.nonverts =  all.plants.count + all.fungi.count + all.inverts.count
 
-**Number of != vertebrate species Red Listed = 47021**
+**Number of non-vertebrate species Red Listed = 47021**
 
 Estimated number of described species of invertebrates, plants and
 fungi. Source:
@@ -129,7 +129,7 @@ estimates. Phytotaxa 272, 82–88.
 
 ### 1.2 Growing the Red List - vascular plants as a case study
 
-filter on vascular plants only and compare with best estimate for total
+Filter on vascular plants only and compare with best estimate for total
 number of vascular plants i.e. Nic Lughadha et al 2016
 
     vasc_plants = subset(all.plants, all.plants$phylum_name == "TRACHEOPHYTA") #PHYLUM = TRACHEOPHYTA (vascular plants)
@@ -183,7 +183,7 @@ downloaded from IPNI Beta site: <https://beta.ipni.org/>
 A query was made for each year, with a filter on 'Specific' taxa
 (species). A csv for each year from 1999 - 2017 inclusive was
 downloaded. See
-[01\_data](https://github.com/stevenpbachman/RedList_Challenges/tree/master/01_data)
+[01\_data](https://github.com/stevenpbachman/RedList_Challenges/tree/master/01_data/IPNI_downloads_25_07_2018)
 for raw data.
 
     # read in raw files. Thanks to Hayward Godwin: https://www.r-bloggers.com/merge-all-files-in-a-directory-using-r-into-a-single-dataframe/
@@ -231,7 +231,7 @@ Summarise number of tax.nov by year
 
     tax.nov.year = tax.nov %>% dplyr::group_by(published) %>% dplyr::count(published)
 
-Plot number of newly described taxa per year
+Plot number of newly described species per year
 
     colnames(tax.nov.year)[which(names(tax.nov.year) == "published")] = "Year"
     colnames(tax.nov.year)[which(names(tax.nov.year) == "n")] = "Count"
@@ -243,11 +243,11 @@ Plot number of newly described taxa per year
 
 ![](Methods_files/figure-markdown_strict/unnamed-chunk-22-1.png)
 
-    # get average number of described tax now between 1999 and 2017
+    # get average number of described species between 1999 and 2017
     tax.nov.year.mean = round((mean(tax.nov.year$Count)),0)
 
-**The description of new plants occurs at a fairly consistent rate, with
-a mean of 2242 per year (1999 – 2017)**
+**The description of new plant species occurs at a fairly consistent
+rate, with a mean of 2242 per year (1999 – 2017)**
 
 Kew Bulletin example - how many newly described taxa published in Kew
 Bulletin from 2003–2017 are currently on the Red List?
@@ -278,18 +278,27 @@ Bulletin from 2003–2017 are currently on the Red List?
     ## [1] 9.392713
 
 **Of the 1,234 newly described taxa published in Kew Bulletin from
-2003–2017, only 1235 9.39 are currently on the Red List**
+2003–2017, only 1235, 9.39% are currently on the Red List**
 
-How much time had elapsed between formal description of a species and
+How much time has elapsed between formal description of a species and
 publication of an assessment for that species on the Red List? Species
 described and then assessed within 5 years were labelled as ‘New’, and
 species that were assessed more than 5 years since they were described
 were labelled ‘Old’.
 
-Use [POWO](http://www.plantsoftheworldonline.org/) API to assign IPNI
-IDs to Red List plant names. Then use IPNI ID to get date/year that
-plant name description was published Compare assessment year with name
-description publication year
+1.  Use [POWO](http://www.plantsoftheworldonline.org/) API to assign
+    IPNI IDs to Red List plant names.
+2.  Then use [OpenRefine](http://openrefine.org/) and IPNI ID to get
+    date/year that plant name description was published
+3.  Query Red List to get assessment year (this doesn't come with the
+    summary data)
+4.  Compare Red List assessment year with name description publication
+    year - plot results.
+
+5.  Use [POWO](http://www.plantsoftheworldonline.org/) API to assign
+    IPNI IDs to Red List plant names.
+
+<!-- -->
 
     ### Query Red List binomials against POWO to see taxonomic status according to POWO
     ### POWO = Plants of the World Online
@@ -406,6 +415,9 @@ description publication year
     respath = paste0(path,"/all.plants.IPNI.csv")
     write.table(all.plants.IPNI, respath,row.names = FALSE, na="", sep = ",")
 
+1.  Then use [OpenRefine](http://openrefine.org/) and IPNI ID to get
+    date/year that plant name description was published
+
 Now that we have IPNI IDs for the Red List assessments for plants, we
 need to pull out the date/year of publication so we can compare
 assessment date vs publication date.
@@ -414,69 +426,195 @@ Use [OpenRefine](http://openrefine.org/) to access structured IPNI data.
 Thanks to [Nicky Nicholson](https://github.com/nickynicolson) for
 method.
 
-1.  Call IPNI to get structured data for each record:
-
-<!-- -->
-
-1.  Click dropdown next to the IPNI id, select “Edit column” -&gt; “Add
-    column by fetching URLs”
-2.  Build the URL by entering the following into the expression box:
-    '<http://ipni.org/urn:lsid:ipni.org:names>:'+value
-3.  Give your new column a title (e.g. “IPNI LSID data”) and a throttle
-    delay of 1000 milliseconds, click OK You should now have a new
-    column with RDF-XML formatted data – these cells will be massive but
-    you can drop (or hide) the column after the next step is completed
-
-<!-- -->
-
-1.  Extract the publication year from the RDF XML:
-
-<!-- -->
-
-1.  Click the dropdown next to the “IPNI LSID data” column, select “Edit
-    column” -&gt; “Add column based on this column”
-2.  Select the year tag in the RDF XML and extract its contents: type
-    in: value.parseHtml().select("tn|year")\[0\].htmlText()
-3.  Give your new column a title (‘publication year’) and click OK
+1.  Call IPNI to get structured data for each record: ⋅⋅\* Click
+    dropdown next to the IPNI id, select “Edit column” -&gt; “Add column
+    by fetching URLs” ⋅⋅\* Build the URL by entering the following into
+    the expression box:
+    '<http://ipni.org/urn:lsid:ipni.org:names>:'+value ⋅⋅\* Give your
+    new column a title (e.g. “IPNI LSID data”) and a throttle delay of
+    1000 milliseconds, click OK You should now have a new column with
+    RDF-XML formatted data – these cells will be massive but you can
+    drop (or hide) the column after the next step is completed
+2.  Extract the publication year from the RDF XML: ⋅⋅\* Click the
+    dropdown next to the “IPNI LSID data” column, select “Edit column”
+    -&gt; “Add column based on this column” ⋅⋅\* Select the year tag in
+    the RDF XML and extract its contents: type in:
+    value.parseHtml().select("tn|year")\[0\].htmlText() ⋅⋅\* Give your
+    new column a title (‘publication year’) and click OK
 
 Save as
-[all.plants.IPNI.csv](https://github.com/stevenpbachman/RedList_Challenges/blob/master/01_data/all.plants.IPNI.csv)
+[RedList2018\_1\_powo\_species\_IPNI\_LSID](https://github.com/stevenpbachman/RedList_Challenges/blob/master/01_data/RedList2018_1_powo_species_IPNI_LSID.csv)
 
-Now import
+1.  Query Red List to get assessment year (this doesn't come with the
+    summary data)
 
-    # import the RL data with IPNI ID and year
+<!-- -->
+
+    #get red list year
+    # import the names list with IPNI ID and year
     path = getwd()
     all_plants_IPNI <- read_csv(paste0(path,"/01_data/all.plants.IPNI.csv"))
 
-    ## Parsed with column specification:
-    ## cols(
-    ##   accepted = col_integer(),
-    ##   author = col_character(),
-    ##   kingdom = col_character(),
-    ##   name = col_character(),
-    ##   rank = col_character(),
-    ##   base_url = col_character(),
-    ##   IPNI_ID = col_character(),
-    ##   search_name = col_character()
-    ## )
-
+    # use the binomial to get the Red List extra data
     IPNI_year = all_plants_IPNI
+    rl_names = IPNI_year[,4]
 
+    # load the red list library
+    library(rredlist)
+
+    #run this function to get the extra red list data
+    rl = function(x, key){
+      sp = rl_search(name = x, key = key)
+      sp = sp$result
+      return(sp)
+    }
+
+    # use apply to run through all in the list
+    t = proc.time()
+    test_apply = apply(rl_names, 1, rl, key = rlkey)
+    rl_df = as.data.frame(do.call(rbind,test_apply))
+    proc.time()- t
+
+    # now join back with all_plants_IPNI
     # change column name so that you can merge with full red list data
-    colnames(IPNI_year)[which(names(IPNI_year) == "search_name")] = "scientific_name"
+    colnames(all_plants_IPNI)[which(names(all_plants_IPNI) == "search_name")] = "scientific_name"
+    rl_IPNI = merge(all_plants_IPNI, rl_df, by = "scientific_name")
 
-### 3.3 Supporting the Plant assessment champions –Specialist Groups and Authorities
+1.  Compare Red List assessment year with name description publication
+    year - plot results.
 
-How much time had elapsed between formal description of a species and
-publication of an assessment for that species on the Red List.Species
-described and then assessed within 5 years were labelled as ‘New’, and
-species that were assessed more than 5 years since they were described
-were labelled ‘Old’.
+<!-- -->
 
-We need to get IPNI IDs for red list plant species and then match that
-with IPNI file so that we have year described and year on red list
+    path = getwd()
+    RedList2018_1_powo_species_IPNI_LSID <- read.csv(paste0(path,"/01_data/RedList2018_1_powo_species_IPNI_LSID.csv"))
+    rl_IPNI_year = RedList2018_1_powo_species_IPNI_LSID
+    rl_IPNI_year = subset(rl_IPNI_year, select = -IPNI_LSID)
+    colnames(rl_IPNI_year)[which(names(rl_IPNI_year) == "search_name")] = "scientific_name"
 
-    # describe method to get IPNI year for all species on the Red List
-    # Open refine
+    # merge IPNI year and Red List 
+    merged_taxnov_RL = merge(rl_IPNI, rl_IPNI_year, by = "scientific_name")
 
-    # merge all.plants.IPNI with full IPNI list
+    # now take the described year away from the published year
+    merged_taxnov_RL_diff = data.frame(diff = merged_taxnov_RL$published_year - merged_taxnov_RL$Year)
+    diff = cbind(merged_taxnov_RL_diff, merged_taxnov_RL)
+
+    # now add column for New (5 years or less) and Old (>5 years)
+    diff$age[diff$diff < 6] <- "New"
+    diff$age[diff$diff >=6] <- "Old"
+    diff$age[is.na(diff$diff)] <- "Unknown"
+
+    diffplot = subset(diff, published_year > 2002 & published_year <2018, select=c(published_year, age))
+
+    # adding in a single record to get a point for 2005 - must be another way to do this...
+    extralev = data.frame(published_year = "2005", age = "Unknown")
+    diffplot = rbind(diffplot, extralev)
+
+    tax.nov.plot = subset(tax.nov.year, tax.nov.year$Year >="2003" & tax.nov.year$Year < "2018")
+
+    # now summarise the ratio of old and new for each red list assessment year
+    library(ggplot2)
+    plot = ggplot() + 
+      geom_bar(data = diffplot, aes(x = as.factor(published_year), fill = as.factor(age)), 
+               position = position_dodge(preserve = 'single')) + 
+      
+      labs(x = "Red List Publication Year", y = "Number of plant species assessments", fill = "") +
+      theme_minimal() +
+      scale_fill_manual(values = c("New" = "#f37735", "Old" = "#ffc425", "Unknown" = "light grey")) +
+      geom_point(data = tax.nov.plot, aes(x = as.factor(Year), y = Count), stat = "identity", size = 2, shape = 16) +
+      #scale_colour_manual(name = "Year", labels = "test", values = "black") +
+      scale_x_discrete(expand = c(0, 0)) + scale_y_continuous(expand = c(0,100)) 
+
+    plot
+
+\`\`\`
+
+### 3.3 Supporting the Plant assessment champions – Specialist Groups and Authorities
+
+Compare number of species assessed vs not assessed for specialist groups
+and non-specialist groups
+
+    #pull out just vascular plants
+    RL_vasc_plants = subset(all.plants, all.plants$phylum == "TRACHEOPHYTA" )
+    RL_vasc_plants$SG = ""
+
+    # total number of described vascualr plants 
+    described.vasc.plants.niclughadha2016 
+
+    ## [1] 383671
+
+    # update SG with specialist group name
+    RL_vasc_plants$SG[RL_vasc_plants$family == "CYMODOCEACEAE"] = "Seagrass"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "HYDROCHARITACEAE"] = "Seagrass"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "POSIDONIACEAE"] = "Seagrass"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "ZOSTERACEAE"] = "Seagrass"
+
+    RL_vasc_plants$SG[RL_vasc_plants$family == "ARECACEAE"] = "Palm"
+
+    RL_vasc_plants$SG[RL_vasc_plants$family == "ORCHIDACEAE"] = "Orchid"
+
+    RL_vasc_plants$SG[RL_vasc_plants$family == "CYCADACEAE"] = "Cycad"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "ZAMIACEAE"] = "Cycad"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "STANGERIACEAE"] = "Cycad"
+
+    RL_vasc_plants$SG[RL_vasc_plants$family == "ARAUCARIACEAE"] = "Conifer"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "CUPRESSACEAE"] = "Conifer"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "PINACEAE"] = "Conifer"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "PODOCARPACEAE"] = "Conifer"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "PHYLLOCLADACEAE"] = "Conifer"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "SCIADOPITYACEAE"] = "Conifer"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "TAXACEAE"] = "Conifer"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "CEPHALOTAXACEAE"] = "Conifer"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "STANGERIACEAE"] = "Conifer"
+
+    RL_vasc_plants$SG[RL_vasc_plants$family == "CACTACEAE"] = "Cacti & Succulents"
+
+    RL_vasc_plants$SG[RL_vasc_plants$family == "NEPENTHACEAE"] = "Carnivorous"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "DROSERACEAE"] = "Carnivorous"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "CEPHALOTACEAE"] = "Carnivorous"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "SARRACENIACEAE"] = "Carnivorous"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "LENTIBULARIACEAE"] = "Carnivorous"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "RORIDULACEAE"] = "Carnivorous"
+    RL_vasc_plants$SG[RL_vasc_plants$family == "DIONCOPHYLLACEAE"] = "Carnivorous"
+
+For each group (specialist group or not) get the count (n rows)
+
+    #now group them up and get counts
+    library(tidyverse)
+    RL_vasc_noSG = subset(RL_vasc_plants, SG == "" )
+    Non_SG_assessed = nrow(RL_vasc_noSG)
+
+    RL_vasc_yesSG = subset(RL_vasc_plants, SG != "" )
+    SG_assessed = nrow(RL_vasc_yesSG)
+
+Now import the count of species per family - derived from [Catalogue of
+life](http://www.catalogueoflife.org/col/browse/tree)
+
+    path = getwd()
+    CoL_24thSep_2018 <- read.csv(paste0(path,"/01_data/CoL_24thSep_2018.csv"))
+
+    # get the total species count for SG groups
+    sumCoL = sum(CoL_24thSep_2018$Count)
+
+    # get the count of species in SGs not assessed
+    SGs_not_assessed = sumCoL - SG_assessed
+
+    # work out the remainder non SG and not assessed
+    Non_SG_not_assesseed = (described.vasc.plants.niclughadha2016 - sum(SG_assessed,SGs_not_assessed,Non_SG_assessed))
+
+Combine to run the chi square test
+
+    SGs = c(SG_assessed,SGs_not_assessed)
+    NonSGs = c(Non_SG_assessed,Non_SG_not_assesseed)
+
+    SG.test = as.data.frame(cbind(SGs,NonSGs))
+    names(SG.test) = c('assessed','not assessed')
+
+    rownames(SG.test) = c("SGs","NonSGs" )
+
+    chisq.test(SG.test)
+
+    ## 
+    ##  Pearson's Chi-squared test with Yates' continuity correction
+    ## 
+    ## data:  SG.test
+    ## X-squared = 2977.5, df = 1, p-value < 2.2e-16
