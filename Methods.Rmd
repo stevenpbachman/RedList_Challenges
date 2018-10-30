@@ -11,8 +11,7 @@ This document describes methods used in the paper **'Progress, challenges and op
 
 ```{r echo=FALSE}
 # RL key needed for download. ***change this to your own key- get from iucn.org 
-rlkey <- "cf3cf316d5dd72945456d42a633ac92357f6b8039bf1d512cc58e26d6169a8f3" # my key
-#rlkey = "9bb4facb6d23f48efbf424bb05c0c1ef1cf6f468393bc745d42179ac4aca5fee" # IUCN key
+rlkey <- "9bb4facb6d23f48efbf424bb05c0c1ef1cf6f468393bc745d42179ac4aca5fee" # IUCN key
 ```
 
 *Total number of taxa on the Red List:*
@@ -108,9 +107,6 @@ prop.verts.RL = round((nrow(all.verts)/described.verts)*100, digits = 2)
 # subset all species to get only plants
 all.plants = subset(all_RL_species, all_RL_species$kingdom_name == "PLANTAE") #KINGDOM = PLANTAE
 all.plants.count = nrow(all.plants)
-
-# print
-print(paste0('Number of plant species Red Listed = ',all.plants.count))
 ```
 
 **Number of plant species Red Listed = `r all.plants.count `**
@@ -138,6 +134,7 @@ all.inverts.count = nrow(all.inverts)
 
 
 ```{r}
+# combine all the non-vertebrates 
 all.RL.nonverts =  all.plants.count + all.fungi.count + all.inverts.count
 ```
 
@@ -171,9 +168,12 @@ prop.nonverts.RL = all.RL.nonverts/described.nonvert*100
 filter on vascular plants only and compare with best estimate for total number of vascular plants i.e. Nic Lughadha et al 2016
 ```{r}
 vasc_plants = subset(all.plants, all.plants$phylum_name == "TRACHEOPHYTA") #PHYLUM = TRACHEOPHYTA (vascular plants)
-nrow(vasc_plants)/described.vasc.plants.niclughadha2016*100
+prop_vasc = nrow(vasc_plants)/described.vasc.plants.niclughadha2016*100
 ```
-**Proportion of vascular plants that have been Red Listed = `r round((nrow(vasc_plants)/described.vasc.plants.niclughadha2016*100), digits = 2)`**
+
+**Proportion of vascular plants that have been Red Listed = `r round((prop_vasc), digits = 2)`**
+
+
 
 ### 2.3 Batch assessment upload with ‘SIS Connect’
 Percentage of assessments published on the Red List via SIS Connect
@@ -219,7 +219,10 @@ Craig Hilton-Taylor, pers. comm (10th August 2018)
 ```{r}
 spatial_tools_citations = 1939
 ```
+
+
 **Number of publications citing spatial tools =  `r spatial_tools_citations`**
+
 
 
 
@@ -250,8 +253,6 @@ for (file in file_list){
     rm(temp_dataset)
   }
 }
-
-#head(IPNI_raw)
 ```
 
 ```{r}
@@ -267,10 +268,14 @@ tax.nov = subset(IPNI_raw, IPNI_raw$citation.type == "tax. nov.")
 ```
 
 Summarise number of tax.nov by year
-```{r}
+```{r echo=FALSE}
+# load library
 library(tidyverse)
+```
+
+
+```{r}
 tax.nov.year = tax.nov %>% dplyr::group_by(published) %>% dplyr::count(published)
-#tax.nov.year
 ```
 
 Plot number of newly described taxa per year
@@ -286,10 +291,12 @@ plot
 
 ```{r}
 # get average number of described tax now between 1999 and 2017
-tax.nov.year.mean = mean(tax.nov.year$Count)
+tax.nov.year.mean = round((mean(tax.nov.year$Count)),0)
 ```
 
-**The discovery of new plants occurs at a fairly consistent rate, with a mean of `r round((tax.nov.year.mean, digits = 2) ` per year (1999 – 2017)**
+
+**The description of new plants occurs at a fairly consistent rate, with a mean of `r tax.nov.year.mean` per year (1999 – 2017)**
+
 
 Kew Bulletin example - how many newly described taxa published in Kew Bulletin from 2003–2017 are currently on the Red List?
 
@@ -376,6 +383,22 @@ plot
   
 ```
 
+
 ### 3.3 Supporting the Plant assessment champions –Specialist Groups and Authorities
+
+How much time had elapsed between formal description of a species and publication of an assessment for that species on the Red List.Species described and then assessed within 5 years were labelled as ‘New’, and species that were assessed more than 5 years since they were described were labelled ‘Old’.
+
+We need to get IPNI IDs for red list plant species and then match that with IPNI file so that we have year described and year on red list
+
+```{r}
+# describe method to get IPNI year for all species on the Red List
+# Open refine
+
+# merge all.plants.IPNI with full IPNI list
+```
+
+
+
+
 
 

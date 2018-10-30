@@ -12,19 +12,13 @@ accepted.result$IPNI_ID[accepted.result$IPNI_ID==""] = NA
 # omit NAs
 all.plants.IPNI = accepted.result %>% na.omit()
 
-
-
-
-
-#as.list(RedList_AcceptedPOWO)
-
 # reduce to non null results
-sara_prvi_powo = subset(accepted.result, rank !="") 
+all.plants.IPNI = subset(all.plants.IPNI, rank =="Species") 
 
 # keep accepted red_list in memory, but save as hard copy for later use if necessary
-path ="C:/Users/sb42kg/OneDrive - The Royal Botanic Gardens, Kew/02_Publications/spb/Machine learning - big data red list/05_R/01_Prepare_Data/"
-respath = paste0(path,"Sara.csv")
-write.table(sara_prvi_powo, respath,row.names = FALSE, na="", sep = ",")
+path = getwd()
+respath = paste0(path,"/all.plants.IPNI.csv")
+write.table(all.plants.IPNI, respath,row.names = FALSE, na="", sep = ",")
 
 
 
