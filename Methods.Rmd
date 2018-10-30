@@ -173,9 +173,7 @@ filter on vascular plants only and compare with best estimate for total number o
 vasc_plants = subset(all.plants, all.plants$phylum_name == "TRACHEOPHYTA") #PHYLUM = TRACHEOPHYTA (vascular plants)
 nrow(vasc_plants)/described.vasc.plants.niclughadha2016*100
 ```
-**Proportion of vascular plants that have been Red Listed = `r nrow(vasc_plants)/described.vasc.plants.niclughadha2016*100`**
-
-
+**Proportion of vascular plants that have been Red Listed = `r round((nrow(vasc_plants)/described.vasc.plants.niclughadha2016*100), digits = 2)`**
 
 ### 2.3 Batch assessment upload with ‘SIS Connect’
 Percentage of assessments published on the Red List via SIS Connect
@@ -186,6 +184,8 @@ sis_connect_pub = 509
 sis_connect_pre_pub = 915
 ```
 **Assessments published via SIS Connect = `r sis_connect_pub`**
+
+
 **Assessments in SIS Connect pipeline = `r sis_connect_pre_pub`**
 
 
@@ -219,7 +219,7 @@ Craig Hilton-Taylor, pers. comm (10th August 2018)
 ```{r}
 spatial_tools_citations = 1939
 ```
-**Number of publications citing spatial tools `r spatial_tools_citations`**
+**Number of publications citing spatial tools =  `r spatial_tools_citations`**
 
 
 
@@ -251,7 +251,7 @@ for (file in file_list){
   }
 }
 
-head(IPNI_raw)
+#head(IPNI_raw)
 ```
 
 ```{r}
@@ -261,7 +261,7 @@ respath = paste0(path,"/04_outputs/IPNI_raw.csv")
 write.table(IPNI_raw, respath,row.names = FALSE, na="", sep = ",")
 ```
 
-Sbuset the IPNI data to just tax.nov.
+Subset the IPNI data to just tax.nov.
 ```{r}
 tax.nov = subset(IPNI_raw, IPNI_raw$citation.type == "tax. nov.")
 ```
@@ -270,7 +270,7 @@ Summarise number of tax.nov by year
 ```{r}
 library(tidyverse)
 tax.nov.year = tax.nov %>% dplyr::group_by(published) %>% dplyr::count(published)
-tax.nov.year
+#tax.nov.year
 ```
 
 Plot number of newly described taxa per year
@@ -289,9 +289,9 @@ plot
 tax.nov.year.mean = mean(tax.nov.year$Count)
 ```
 
-**The discovery of new plants occurs at a fairly consistent rate, with a mean of `r tax.nov.year.mean` per year (1999 – 2017)**
+**The discovery of new plants occurs at a fairly consistent rate, with a mean of `r round((tax.nov.year.mean, digits = 2) ` per year (1999 – 2017)**
 
-Kew Bulletin example - look at year range 2003 - 2017 (2003 onwards as this is when 3.1 assessments first came in for plants). How many have been red listed?
+Kew Bulletin example - how many newly described taxa published in Kew Bulletin from 2003–2017 are currently on the Red List?
 
 ```{r}
 # get Kew Bull species 2003 - 2017
@@ -313,9 +313,69 @@ nrow(KB_RL_joined)
 nrow(KB_RL_joined)/nrow(KewBull_tax.nov)*100
 ```
 
-**Of the 1,234 newly described taxa published in Kew Bulletin from 2003–2017, only `r nrow(KewBull_tax.nov)` `r nrow(KB_RL_joined)/nrow(KewBull_tax.nov)*100` are currently on the Red List**
+**Of the 1,234 newly described taxa published in Kew Bulletin from 2003–2017, only `r nrow(KewBull_tax.nov)` `r round((nrow(KB_RL_joined)/nrow(KewBull_tax.nov)*100),digits = 2)` are currently on the Red List**
 
 
-What is ratio of old (>5 years) and new (<=5 years) assessments for each red list publicaiton year (Figure 2). 
+How much time had elapsed between formal description of a species and publication of an assessment for that species on the Red List? Species described and then assessed within 5 years were labelled as ‘New’, and species that were assessed more than 5 years since they were described were labelled ‘Old’. 
 
-############### trying different method
+Link the Red List plant names to IPNI so that we can get year of description 
+```{r}
+
+# here we run the POWO script against the Red list list of names to get matches. 
+# could also try other ways to match - IPNI, TPL via GBIF?
+
+# the rest is just linking IPNI IDs
+```
+
+
+
+```{r}
+# import the RL data with IPNI ID and year
+RedList2018_1_powo_species_IPNI_LSID <- read.csv("C:/Users/sb42kg/OneDrive - The Royal Botanic Gardens, Kew/02_Publications/PhD/Major_Corrections/RedList_challenges/01_data/RedList2018_1_powo_species_IPNI_LSID.csv")
+
+IPNI_year = RedList2018_1_powo_species_IPNI_LSID
+
+# change column name so that you can merge with full red list data
+colnames(IPNI_year)[which(names(IPNI_year) == "search_name")] = "scientific_name"
+
+# merge IPNI year and Red List 
+merged_taxnov_RL = merge(IPNI_year, all.plants.RL_full, by = "scientific_name")
+
+# now take the described year away from the published year
+merged_taxnov_RL_diff = data.frame(diff = merged_taxnov_RL$published_year - merged_taxnov_RL$Year)
+diff = cbind(merged_taxnov_RL_diff, merged_taxnov_RL)
+
+# now add column for New (5 years or less) and Old (>5 years)
+diff$age[diff$diff < 6] <- "New"
+diff$age[diff$diff >=6] <- "Old"
+diff$age[is.na(diff$diff)] <- "Unknown"
+
+diffplot = subset(diff, published_year > 2002 & published_year <2018, select=c(published_year, age))
+
+# adding in a single record to get a point for 2005 - must be another way to do this...
+extralev = data.frame(published_year = "2005", age = "Unknown")
+diffplot = rbind(diffplot, extralev)
+
+tax.nov.plot = subset(tax.nov.year, tax.nov.year$Year >="2003" & tax.nov.year$Year < "2018")
+RL_vasc_plants = subset(all.plants.RL_full, all.plants.RL_full$phylum == "TRACHEOPHYTA" )
+
+# now summarise the ratio of old and new for each red list assessment year
+library(ggplot2)
+plot = ggplot() + 
+  geom_bar(data = diffplot, aes(x = as.factor(published_year), fill = as.factor(age)), 
+           position = position_dodge(preserve = 'single')) + 
+  
+  labs(x = "Red List Publication Year", y = "Number of plant species assessments", fill = "") +
+  theme_minimal() +
+  scale_fill_manual(values = c("New" = "#f37735", "Old" = "#ffc425", "Unknown" = "light grey")) +
+    geom_point(data = tax.nov.plot, aes(x = as.factor(year), y = Count), stat = "identity", size = 2, shape = 16) +
+  #scale_colour_manual(name = "Year", labels = "test", values = "black") +
+  scale_x_discrete(expand = c(0, 0)) + scale_y_continuous(expand = c(0,100)) 
+  
+plot
+  
+```
+
+### 3.3 Supporting the Plant assessment champions –Specialist Groups and Authorities
+
+
