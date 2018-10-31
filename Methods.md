@@ -218,14 +218,14 @@ Subset the IPNI data to just tax.nov.
 
 Summarise number of tax.nov by year
 
-    ## -- Attaching packages ------------------------------------------------------------------------------------------ tidyverse 1.2.1 --
+    ## -- Attaching packages ----------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
 
     ## v ggplot2 3.0.0     v purrr   0.2.4
     ## v tibble  1.4.2     v dplyr   0.7.5
     ## v tidyr   0.8.0     v stringr 1.3.0
     ## v readr   1.1.1     v forcats 0.3.0
 
-    ## -- Conflicts --------------------------------------------------------------------------------------------- tidyverse_conflicts() --
+    ## -- Conflicts -------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -513,7 +513,7 @@ Save as
 
     # now summarise the ratio of old and new for each red list assessment year
     library(ggplot2)
-    plot = ggplot() + 
+    fig_2 = ggplot() + 
       geom_bar(data = diffplot, aes(x = as.factor(published_year), fill = as.factor(age)), 
                position = position_dodge(preserve = 'single')) + 
       
@@ -524,9 +524,12 @@ Save as
       #scale_colour_manual(name = "Year", labels = "test", values = "black") +
       scale_x_discrete(expand = c(0, 0)) + scale_y_continuous(expand = c(0,100)) 
 
-    plot
+    fig_2
 
-\`\`\`
+    path = getwd()
+    ggsave(paste0(path,"/03_figs/fig_2.png"), width = 10)
+
+    ?ggsave
 
 ### 3.3 Supporting the Plant assessment champions – Specialist Groups and Authorities
 
