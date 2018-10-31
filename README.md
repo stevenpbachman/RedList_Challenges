@@ -4,10 +4,10 @@ Introduction
 This repository contains code used in the paper: **"Progress, challenges
 and opportunities for plant Red Listing"**.
 
-All analysis was run in R aside from the workflow for [Figure
-1](https://github.com/stevenpbachman/RedList_Challenges/blob/master/03_figs/fig_1.jpg)
-(Microsoft powerpoint) and the map for [Figure
-3](https://github.com/stevenpbachman/RedList_Challenges/blob/master/03_figs/fig_3.jpg)
+All analysis was run in R aside from the workflow for
+[Figure\_1](https://github.com/stevenpbachman/RedList_Challenges/blob/master/03_figs/fig_1.jpg)
+(Microsoft powerpoint) and the map for
+[Figure\_3](https://github.com/stevenpbachman/RedList_Challenges/blob/master/03_figs/fig_3.jpg)
 (ArcMap 10.3).
 
 See
