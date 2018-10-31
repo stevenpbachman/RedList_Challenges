@@ -276,7 +276,11 @@ library(tidyverse)
 
 
 ```{r}
-tax.nov.year = tax.nov %>% dplyr::group_by(published) %>% dplyr::count(published)
+# remove invalid names
+tax.nov.acc = subset(tax.nov, name.status.type == "")
+
+# group and count
+tax.nov.year = tax.nov.acc %>% dplyr::group_by(published) %>% dplyr::count(published)
 ```
 
 Plot number of newly described species per year
@@ -309,6 +313,9 @@ KewBull_raw <- read.csv("01_data/IPNI_Kew_Bulletin_IPNI_downloads_25_07_2018/cit
 # summarise to just tax.nov
 KewBull_tax.nov = subset(KewBull_raw, KewBull_raw$citation.type == "tax. nov.")
 nrow(KewBull_tax.nov)
+
+# remove invalid names
+KewBull_tax.nov = subset(KewBull_tax.nov name.status.type == "")
 
 # change column names to match
 colnames(KewBull_tax.nov)[which(names(KewBull_tax.nov) == "scientific.name")] = "scientific_name"
