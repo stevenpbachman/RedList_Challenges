@@ -2,7 +2,7 @@ Introduction
 ============
 
 This repository contains code used in the paper: **"Progress, challenges
-and opportunities for plant Red Listing"**.
+and opportunities for Red Listing"**.
 
 All analysis was run in R aside from the workflow for
 [Figure\_1](https://github.com/stevenpbachman/RedList_Challenges/blob/master/03_figs/fig_1.jpg)
