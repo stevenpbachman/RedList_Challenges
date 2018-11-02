@@ -276,7 +276,14 @@ library(tidyverse)
 
 
 ```{r}
+<<<<<<< HEAD
 tax.nov.acc = subset(tax.nov, name.status.type == "")
+=======
+# remove invalid names
+tax.nov.acc = subset(tax.nov, name.status.type == "")
+
+# group and count
+>>>>>>> c0966f858c306ecce2e517daeb0a2f177436052c
 tax.nov.year = tax.nov.acc %>% dplyr::group_by(published) %>% dplyr::count(published)
 ```
 
@@ -311,8 +318,13 @@ KewBull_raw <- read.csv("01_data/IPNI_Kew_Bulletin_IPNI_downloads_25_07_2018/cit
 KewBull_tax.nov = subset(KewBull_raw, KewBull_raw$citation.type == "tax. nov.")
 nrow(KewBull_tax.nov)
 
+<<<<<<< HEAD
 # remove invalid
 KewBull_tax.nov = subset(KewBull_tax.nov, name.status.type == "")
+=======
+# remove invalid names
+KewBull_tax.nov = subset(KewBull_tax.nov name.status.type == "")
+>>>>>>> c0966f858c306ecce2e517daeb0a2f177436052c
 
 # change column names to match
 colnames(KewBull_tax.nov)[which(names(KewBull_tax.nov) == "scientific.name")] = "scientific_name"
